@@ -40,3 +40,9 @@ step 4:
 ```bash
 uv run main.py
 ```
+
+if any library missed, please add by 
+```bash
+uv add library_name
+```
+

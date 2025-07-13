@@ -2,7 +2,7 @@
 
 ## 🚀 Requirements
 
-- Python >= 3.9
+- Python >= 3.9 (i used python==3.11.9)
 - [uv](https://pypi.org/project/uv/)
 
 Install **uv** globally:

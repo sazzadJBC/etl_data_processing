@@ -6,6 +6,13 @@ __pycache__/
 # C extensions
 *.so
 
+# Virtual environments
+.venv
+
+data/
+logs/
+output_dir/
+
 # Distribution / packaging
 .Python
 build/

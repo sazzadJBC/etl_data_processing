@@ -1,0 +1,14 @@
+[project]
+name = "etl-data-extraction"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11.9"
+dependencies = [
+    "docling>=2.40.0",
+    "ipykernel>=6.29.5",
+    "pypandoc-binary>=1.15",
+]
+
+[tool.uv.sources]
+docling = { git = "https://github.com/sazzadJBC/docling.git" }

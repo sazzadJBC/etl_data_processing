@@ -27,8 +27,7 @@ def main():
 
     # Define the folder path and file formats to load
     folder_path = Path(os.environ.get("SOURCE_DIR","."))
-    formats = ast.literal_eval(os.environ.get("FORMATS",['.txt'] )) # supported format {'csv', 'docx', 'html', 'asciidoc', 'md', 'image', 'pdf', 'pptx', 'xlsx'}
-    
+    formats = ast.literal_eval(os.environ.get("FORMATS",['.txt'])) # supported format {'csv', 'docx', 'html', 'asciidoc', 'md', 'image', 'pdf', 'pptx', 'xlsx'}
     # Load files by format
     try:
         files = load_files_by_format(folder_path, formats)
@@ -38,6 +37,10 @@ def main():
     except Exception as e:
         logger.error(f"Error loading files: {e}")
         return
+    if not files:
+        logger.info("No files found to process. Exiting.")
+        return
+    logger.info("Starting file conversion process...")
 
     # Build docling converter
     doc_converter = build_docling_converter()

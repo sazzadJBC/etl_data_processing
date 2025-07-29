@@ -1,29 +1,56 @@
 import os
+from typing import List
 
-def load_files_by_format(directory_path, allowed_extensions):
-    """
-    Scan a directory and return paths of files matching given extensions.
 
-    :param directory_path: Path to the folder to scan.
-    :param allowed_extensions: List of allowed file extensions (e.g. [".txt", ".pdf"])
-    :return: List of file paths matching allowed extensions.
-    """
-    matched_files = []
+class FileLoader:
+    def __init__(self, directory_path: str, allowed_extensions: List[str]):
+        """
+        Initialize FileLoader with the directory path and allowed file extensions.
 
-    for root, dirs, files in os.walk(directory_path):
-        for file in files:
-            _, ext = os.path.splitext(file)
-            if ext.lower() in [e.lower() for e in allowed_extensions]:
-                file_path = os.path.join(root, file)
-                matched_files.append(file_path)
+        :param directory_path: Path to the folder to scan.
+        :param allowed_extensions: List of allowed file extensions (e.g. [".txt", ".pdf"])
+        """
+        self.directory_path = directory_path
+        self.allowed_extensions = [ext.lower() for ext in allowed_extensions]
 
-    return matched_files
+    def is_valid_extension(self, filename: str) -> bool:
+        """
+        Check if a file has a valid extension.
 
+        :param filename: Name of the file to check.
+        :return: True if extension is valid, else False.
+        """
+        _, ext = os.path.splitext(filename)
+        return ext.lower() in self.allowed_extensions
+
+    def load_files(self) -> List[str]:
+        """
+        Load all files in the directory matching the allowed extensions.
+
+        :return: List of matching file paths.
+        """
+        matched_files = []
+
+        try:
+            if not os.path.exists(self.directory_path):
+                raise FileNotFoundError(f"Directory not found: {self.directory_path}")
+
+            for root, _, files in os.walk(self.directory_path):
+                for file in files:
+                    try:
+                        if self.is_valid_extension(file):
+                            matched_files.append(os.path.join(root, file))
+                    except Exception as file_error:
+                        print(f"⚠️ Skipping file due to error: {file} — {file_error}")
+
+        except Exception as e:
+            print(f"❌ Error while scanning directory: {e}")
+
+        return matched_files
+
+
+# Example usage:
 if __name__ == "__main__":
-    folder_path = "/home/mhossain/Documents/SevenSix/etl_data_extraction/data/s3_downloads/"
-    formats = [ ".txt" ]
-    
-    files = load_files_by_format(folder_path, formats)
-    print("Found files:")
-    for f in files:
-        print(f)
+    loader = FileLoader(directory_path="/path/to/your/folder", allowed_extensions=[".txt", ".pdf"])
+    files = loader.load_files()
+    print(files)

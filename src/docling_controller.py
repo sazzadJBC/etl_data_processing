@@ -41,7 +41,7 @@ def build_docling_converter():
     pipeline_options.images_scale = 2
     pipeline_options.do_picture_classification = True
     pipeline_options.accelerator_options = AcceleratorOptions(
-        num_threads=8   , device=AcceleratorDevice.MPS
+        num_threads=8   , device=AcceleratorDevice.AUTO
     )
     # Enable the profiling to measure the time spent
     # settings.debug.profile_pipeline_timings = True

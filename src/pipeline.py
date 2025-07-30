@@ -2,7 +2,8 @@ from pathlib import Path
 from src.logger import setup_logger
 from src.db_conversion.struct_to_sql import StructuredToSQL
 from src.file_loader import FileLoader
-from config import SOURCE_PATH, SUPPORT_FORMAT
+from config import SOURCE_PATH, SUPPORT_FORMAT, OUTPUT_PATH
+from src.docling_extractor import DoclingConverter
 
 class ETLPipeline:
     def __init__(self, db_path: str = "business_data.db",
@@ -22,6 +23,7 @@ class ETLPipeline:
         self.threshold_mb = threshold_mb
         self.file_loader = FileLoader(directory_path=SOURCE_PATH, allowed_extensions=SUPPORT_FORMAT)
         self.struct_converter = StructuredToSQL(db_path=self.db_path, use_dask=self.use_dask, threshold_mb=self.threshold_mb)
+        self.doc_converter = DoclingConverter()
 
     def run(self):
         """
@@ -29,7 +31,6 @@ class ETLPipeline:
         """
         files = self.file_loader.load_files()
         self.logger.info(f"Found {len(files)} files matching formats {SUPPORT_FORMAT} in {SOURCE_PATH}")
-
         if not files:
             self.logger.info("No files found to process. Exiting.")
             return
@@ -43,9 +44,18 @@ class ETLPipeline:
                     self.logger.info(f"Processing structured file: {file_path}")
                     self.struct_converter.process_individual_file(file_path=file_path)
 
-                elif ext in [".pdf", ".docx", ".pptx", ".txt", ".md", ".html", ".asciidoc"]:
+                elif ext in [".pdf", ".docx", ".pptx", ".txt", ".md", ".html", ".asciidoc",".pptx"]:
                     self.logger.info(f"Processing document file: {file_path}")
-                    # TODO: Add document processing here
+                    self.doc_converter.convert_documents(
+                        input_paths=[file_path],  # Replace with your file paths
+                        output_dir=OUTPUT_PATH,
+                        table_extraction=True,
+                        struct_to_sql=self.struct_converter,
+                        save_markdown=True,
+                        save_yaml=False,
+                        save_text=False,
+                        save_json=False
+                    )
 
                 elif ext in [".png", ".jpg", ".jpeg", ".bmp"]:
                     self.logger.info(f"Processing image file: {file_path}")

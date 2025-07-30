@@ -19,12 +19,39 @@ class StructuredToSQL:
         df = df.dropna(how='all')  # Drop fully empty rows
         df = df.dropna(axis=1, how='all')  # Drop fully empty columns
         return df
+    
+    def _rename_duplicate_columns(self,df):
+        """
+        Rename duplicate columns dynamically in a DataFrame by appending suffixes like _1, _2, etc.
+        Example:
+        ['費用', '費用', '費用'] ➜ ['費用', '費用_1', '費用_2']
+        """
+        from collections import defaultdict
+
+        seen = defaultdict(int)
+        new_columns = []
+
+        for col in df.columns:
+            if seen[col]:
+                new_col = f"{col}_{seen[col]}"
+            else:
+                new_col = col
+            seen[col] += 1
+            new_columns.append(new_col)
+
+        df.columns = new_columns
+        return df
+
+    
 
     def _insert_into_sql(self, df, table_name, mode="replace"):
         df = self._clean_dataframe(df)
         if not df.empty:
-            df.to_sql(table_name, self.conn, if_exists=mode, index=False)
-            print(f"✅ Inserted into table '{table_name}' ({len(df)} rows)")
+            try:
+                df.to_sql(table_name, self.conn, if_exists=mode, index=False)
+                print(f"✅ Inserted into table '{table_name}' ({len(df)} rows)")
+            except Exception as e:
+                print(f"❌ Error inserting into table '{table_name}': {e}")
         else:
             print(f"Skipped table '{table_name}' — cleaned DataFrame is empty")
 

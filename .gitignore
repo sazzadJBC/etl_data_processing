@@ -16,6 +16,7 @@ logs/
 output_dir/
 *.db
 
+.env
 
 # Distribution / packaging
 .Python

@@ -15,7 +15,7 @@ sevensix_data/
 logs/
 output_dir/
 *.db
-
+test_data/
 .env
 
 # Distribution / packaging

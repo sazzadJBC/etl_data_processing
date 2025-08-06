@@ -16,7 +16,7 @@ from docling.document_converter import (
 from docling.datamodel.pipeline_options import PdfPipelineOptions
 from docling.pipeline.simple_pipeline import SimplePipeline
 from docling.pipeline.standard_pdf_pipeline import StandardPdfPipeline
-
+from docling_core.transforms.serializer.markdown import MarkdownDocSerializer
 from docling_core.types.doc.document import DocItemLabel
 
 # Define which labels you DO want (exclude TABLE)
@@ -34,9 +34,13 @@ labels_to_include = {
 }
 
 class DoclingConverter:
-    def __init__(self):
+    def __init__(self,weaviate_client=None,
+                 struct_to_sql=None):
+        """ Initialize the DoclingConverter with optional Weaviate client and StructuredToSQL instance. """
+        self.struct_to_sql = struct_to_sql
         self.logger = setup_logger("etl_app")
         self.doc_converter = self._build_converter()
+        self.weaviate_client = weaviate_client
 
     def _build_converter(self) -> DocumentConverter:
         pipeline_options = PdfPipelineOptions()
@@ -82,43 +86,30 @@ class DoclingConverter:
         self,
         input_paths,
         output_dir=Path("scratch"),
-        table_extraction=True,
-        struct_to_sql=None,
-        save_markdown=True,
+        table_extraction=False,
+        save_VectorDB=False,
+        save_markdown=False,
         save_yaml=False,
         save_text=False,
         save_json=False,
     ):
         start_time = time.time()
         conv_results = self.doc_converter.convert_all(input_paths)
-
-        for res in conv_results:
+        for i,res in enumerate(conv_results):
             stem = res.input.file.stem
             if table_extraction:
-                for table_ix, table in enumerate(res.document.tables):
-                    table_df: pd.DataFrame = table.export_to_dataframe()
-                    print(f"## Table {table_ix}")
-                    print(table_df.to_markdown())
-                    if table_df.shape[0]==0 or table_df.shape[1]==0:
-                        self.logger.warning(f"Empty table found in {res.input.file.name}, skipping export.")
-                        continue
-                    
-                    # Save the table as csv
-                    file_name = f"{stem}-table-{table_ix + 1}"
-                    table_df = struct_to_sql._rename_duplicate_columns(table_df)
-                    struct_to_sql._insert_into_sql(table_df, file_name, mode="replace")
-                    if struct_to_sql:
-                        self.logger.info(f"Table {table_ix + 1} processed and inserted into SQL.")
-                    else:
-                        self.logger.warning("No StructuredToSQL instance provided, skipping SQL insertion.")
-                    # Save the table as csv
-                    element_csv_filename = output_dir / f"{file_name}.csv"
-                    self.logger.info(f"Saving CSV table to {element_csv_filename}")
-                    table_df.to_csv(element_csv_filename)
-
+                self.table_extraction(res,output_dir)
             self.logger.info(f"✅ Document converted: {res.input.file.name}")
             self.logger.debug(res.document._export_to_indented_text(max_text_len=16))
-
+            if save_VectorDB:
+                self.logger.info("VectorDB saving is enabled")
+                serializer = MarkdownDocSerializer(doc=res.document)
+                ser_result = serializer.serialize()
+                ser_text = ser_result.text
+                self.weaviate_client.insert_data_from_lists(
+                    texts=[ser_text],
+                    sources=[input_paths[i]]
+                )
             if save_markdown:
                 md_path = output_dir / f"{stem}.md"
                 if table_extraction:
@@ -148,6 +139,31 @@ class DoclingConverter:
 
         self.logger.info(f"Total time taken: {time.time() - start_time:.2f} seconds")
 
+    def table_extraction(self, res, output_dir):
+        """
+        Extract tables from a document and save them as CSV files.
+        """
+        stem = res.input.file.stem
+        for table_ix, table in enumerate(res.document.tables):
+            table_df: pd.DataFrame = table.export_to_dataframe()
+            print(f"## Table {table_ix}")
+            print(table_df.to_markdown())
+            if table_df.shape[0]==0 or table_df.shape[1]==0:
+                self.logger.warning(f"Empty table found in {res.input.file.name}, skipping export.")
+                continue
+            
+            # Save the table as csv
+            file_name = f"{stem}-table-{table_ix + 1}"
+            table_df = self.struct_to_sql._rename_duplicate_columns(table_df)
+            self.struct_to_sql._insert_into_sql(table_df, file_name, mode="replace")
+            if self.struct_to_sql:
+                self.logger.info(f"Table {table_ix + 1} processed and inserted into SQL.")
+            else:
+                self.logger.warning("No StructuredToSQL instance provided, skipping SQL insertion.")
+            # Save the table as csv
+            element_csv_filename = output_dir / f"{file_name}.csv"
+            self.logger.info(f"Saving CSV table to {element_csv_filename}")
+            table_df.to_csv(element_csv_filename)
 
 # Example usage
 if __name__ == "__main__":

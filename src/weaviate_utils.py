@@ -21,6 +21,7 @@ class WeaviateClient:
         return weaviate.connect_to_local(headers=headers)
 
     def _create_collection(self):
+        # self.client.collections.delete_all()
         if self.collection_name in self.client.collections.list_all():
             print(f"Collection '{self.collection_name}' already exists. Using existing collection.")
             return self.client.collections.get(self.collection_name)
@@ -36,16 +37,16 @@ class WeaviateClient:
             reranker_config=Configure.Reranker.jinaai("jina-reranker-v2-base-multilingual"),
             properties=[
                 Property(name="text", data_type=DataType.TEXT, vectorize_property=True),
-                Property(name="path", data_type=DataType.TEXT, vectorize_property=False)
+                Property(name="source", data_type=DataType.TEXT, vectorize_property=False)
             ]
         )
 
-    def insert_data_from_lists(self, texts, paths):
-        if len(texts) != len(paths):
-            raise ValueError("Length of texts and paths must be equal.")
+    def insert_data_from_lists(self, texts, sources):
+        if len(texts) != len(sources):
+            raise ValueError("Length of texts and sources must be equal.")
 
-        data = [{"text": t, "path": p} for t, p in zip(texts, paths)]
-        print(f"📥 Inserting {len(data)} items with text and path...")
+        data = [{"text": t, "source": p} for t, p in zip(texts, sources)]
+        print(f"📥 Inserting {len(data)} items with text and source...")
         response = self.collection.data.insert_many(data)
         if response.has_errors:
             print("❌ Insert Errors:")
@@ -60,33 +61,23 @@ class WeaviateClient:
             limit=limit,
             rerank=Rerank(prop="text"),
             return_metadata=MetadataQuery(distance=True),
-            return_properties=["text", "path"]
+            return_properties=["text", "source"]
         )
         for i, obj in enumerate(response.objects, start=1):
             print(f"Result #{i}:")
             print("Text:", obj.properties.get("text"))
-            print("Path:", obj.properties.get("path"))
+            print("source:", obj.properties.get("source"))
             print("Distance:", obj.metadata.distance)
             print("Rerank Score:", obj.metadata.rerank_score)
             print("---")
     
 
-    def delete_by_path(self, file_path: str):
-        print(f"🗑️ Attempting to delete objects with path: {file_path}")
-        
-        # Build proper filter
-        # where_filter = 
-
+    def delete_by_source(self, file_source: str):
+        print(f"🗑️ Attempting to delete objects with source: {file_source}")
         result = self.collection.data.delete_many(
-            where=Filter.by_property("path").equal(file_path)
+            where=Filter.by_property("source").equal(file_source)
         )
-        print(f"Deletion result: {result}")
-        # deleted_count = result.
-        # .get('matches', 0)
-        # if deleted_count > 0:
-        #     print(f"✅ Deleted {deleted_count} object(s) with path '{file_path}'.")
-        # else:
-        #     print(f"⚠️ No objects found for path: {file_path}")
+        print(f"Successfully Deleted {result.matches} and failed {result.failed}")
 
 
 # ------------------------------
@@ -104,7 +95,7 @@ if __name__ == "__main__":
         "Indian field development is ongoing.",
         "ওইণ্ডিয়ান ফীল্ড একটি টার্গেট পয়েন্ট।"
     ]
-    paths = [
+    sources = [
         "file1.txt",
         "file2.txt",
         "file3.txt","file1.txt",
@@ -115,7 +106,7 @@ if __name__ == "__main__":
     ]
 
     client = WeaviateClient()
-    client.insert_data_from_lists(texts, paths)
+    # client.insert_data_from_lists(texts, sources)
     # client.query_data("ওইণ্ডিয়ান ফীল্ড")
-    # client.delete_by_path("file1.txt")
+    client.delete_by_source("file1.txt")
     

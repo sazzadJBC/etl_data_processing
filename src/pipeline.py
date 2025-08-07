@@ -63,6 +63,9 @@ class ETLPipeline:
                         result = self.agentic_extractor.parse_documents(file_path)
                         ser_result = result[0].extraction
                         print(ser_result)
+                        ### need to implement the logic to convert the extracted data into a format suitable for postgres database
+                        
+                        #
                         # self.client.insert_data_from_lists(
                         #     texts=[ser_result],
                         #     sources=[file_path]

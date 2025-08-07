@@ -1,0 +1,58 @@
+{
+  "type": "object",
+  "title": "OrganizationExtractedFields",
+  "properties": {
+    "organization_name": {
+      "type": "string",
+      "description": "The full name of the organization"
+    },
+    "company_overview": {
+      "type": "string",
+      "description": "A general overview of the company and its purpose"
+    },
+    "business_activities": {
+      "type": "string",
+      "description": "Description of the company's core business operations"
+    },
+    "history": {
+      "type": "string",
+      "description": "A summary of the company's history and founding background"
+    },
+    "group_companies": {
+      "type": "string",
+      "description": "List or overview of subsidiaries or group companies"
+    },
+    "major_business_partners": {
+      "type": "string",
+      "description": "Key business partners and affiliations"
+    },
+    "sales_trends": {
+      "type": "string",
+      "description": "Sales trends and financial performance over time"
+    },
+    "president_message": {
+      "type": "string",
+      "description": "Message or statement from the company's president or CEO"
+    },
+    "interview_articles": {
+      "type": "string",
+      "description": "Related interviews or featured articles about the company"
+    },
+    "past_transactions": {
+      "type": "string",
+      "description": "Notable transactions the company has been involved in"
+    }
+  },
+  "required": [
+    "organization_name",
+    "company_overview",
+    "business_activities",
+    "history",
+    "group_companies",
+    "major_business_partners",
+    "sales_trends",
+    "president_message",
+    "interview_articles",
+    "past_transactions"
+  ]
+}

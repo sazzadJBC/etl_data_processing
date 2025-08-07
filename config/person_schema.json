@@ -1,0 +1,43 @@
+{
+  "type": "object",
+  "title": "PersonExtractedFields",
+  "properties": {
+    "person_name": {
+      "type": "string",
+      "description": "The full name of the person"
+    },
+    "organization_id": {
+      "type": "integer",
+      "description": "The organization or company id the person is affiliated with"
+    },
+    "organization": {
+      "type": "string",
+      "description": "The organization or company the person is affiliated with"
+    },
+    "title": {
+      "type": "string",
+      "description": "The title or position held by the person"
+    },
+    "career_history": {
+      "type": "string",
+      "description": "A summary of the person's past roles or professional experience"
+    },
+    "current_activities": {
+      "type": "string",
+      "description": "The person's current responsibilities, projects, or roles"
+    },
+    "publications": {
+      "type": "string",
+      "description": "List or summary of the person's publications, if any"
+    }
+  },
+  "required": [
+    "person_name",
+    "organization_id",
+    "organization",
+    "title",
+    "career_history",
+    "current_activities",
+    "publications"
+  ]
+}

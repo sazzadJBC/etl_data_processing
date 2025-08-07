@@ -5,7 +5,8 @@ from src.file_loader import FileLoader
 from config import SOURCE_PATH, SUPPORT_FORMAT, OUTPUT_PATH
 from src.docling_extractor import DoclingConverter
 from src.weaviate_utils import WeaviateClient
-from agentic_doc.parse import parse
+from src.agentic_extractor import AgenticExtractor
+
 import os
 from pathlib import Path
 class ETLPipeline:
@@ -31,6 +32,7 @@ class ETLPipeline:
         self.struct_converter = StructuredToSQL(db_path=self.db_path, use_dask=self.use_dask, threshold_mb=self.threshold_mb)
         self.client = WeaviateClient(collection_name=weaviate_collection_name)
         self.doc_converter = DoclingConverter(self.client,self.struct_converter)
+        self.agentic_extractor=AgenticExtractor()#include_marginalia=True,include_metadata_in_markdown=False, result_save_dir=OUTPUT_PATH)
         
 
     def run(self):
@@ -58,12 +60,13 @@ class ETLPipeline:
                     self.logger.info(f"Processing document file: {file_path}")
                     if self.agentic_parse==True and ext == ".pdf":
                         # Use Agentic Doc to parse the PDF
-                        result = parse(file_path, include_marginalia=True,include_metadata_in_markdown=False, result_save_dir=OUTPUT_PATH)
-                        ser_result = result[0].markdown
-                        self.client.insert_data_from_lists(
-                            texts=[ser_result],
-                            sources=[file_path]
-                        )
+                        result = self.agentic_extractor.parse_documents(file_path)
+                        ser_result = result[0].extraction
+                        print(ser_result)
+                        # self.client.insert_data_from_lists(
+                        #     texts=[ser_result],
+                        #     sources=[file_path]
+                        # )
                     else:
                         self.doc_converter.convert_documents(
                             input_paths=[file_path],  # Replace with your file paths

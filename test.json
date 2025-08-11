@@ -1,0 +1,73 @@
+<!-- wp:heading -->
+<h2>製品詳細</h2>
+<!-- /wp:heading -->
+
+<!-- wp:table {"className":"is-style-lefthead"} -->
+<figure class="wp-block-table is-style-lefthead"><table><tbody><tr><td>対応波長（nm）</td><td>900 ~ 4200</td></tr><tr><td>出力（mW）</td><td>450</td></tr><tr><td>繰返し周波数（MHz）</td><td>2.5</td></tr><tr><td>ビーム品質</td><td>1.1</td></tr></tbody></table></figure>
+<!-- /wp:table -->
+
+<!-- wp:heading {"level":3} -->
+<h3>アプリケーション</h3>
+<!-- /wp:heading -->
+
+<!-- wp:list -->
+<ul><li><a href="#">センシング / デバイス評価</a></li><li><a href="#">デバイス</a><a href="https://www.sevensix.co.jp/product/product/application/app_sensing/app_evaluation/">評価</a></li><li><a href="#">バイオ/医療/イメージング</a></li><li><a href="#">光ガスセンシング</a></li><li><a href="#">光ファイバセンシング</a></li><li><a href="#">分光</a></li><li><a href="#">研究&amp;開発/教育用キット</a></li></ul>
+<!-- /wp:list -->
+
+<!-- wp:heading {"level":3} -->
+<h3>SuperK MIR : Mid-IR Supercontinuum レーザの特長</h3>
+<!-- /wp:heading -->
+
+<!-- wp:image {"align":"right","id":425,"width":404,"height":238,"sizeSlug":"full","linkDestination":"none"} -->
+<div class="wp-block-image"><figure class="alignright size-full is-resized"><img src="https://www.sevensix.co.jp/wp-content/uploads/superK_MIR_spectr.jpeg" alt="" class="wp-image-425" width="404" height="238"/></figure></div>
+<!-- /wp:image -->
+
+<!-- wp:paragraph -->
+<p>SuperK MIR は、可視域のSupercontinuum レーザのマーケットリーダーである NKT Photonics が満を持して製品化した 900 – 4200 nm の中赤外域( Mid-IR )広帯域スペクトルを持つ&nbsp;Supercontinuum ファイバレーザです。SuperK MIR は、フルパッケージされたオールファイバ構成で、ターンキー動作と使いやすいのが特長です。出力は &gt; 450 mWで、光ファイバの先端に取り付けられたコリメートレンズから射出されます。ビーム品質は M2 &lt; 1.1、繰返し周波数は 2.5 MHz なので FT-IR(Fourier transform infrared) or FT-MIR にも使いやすい光源となっております。</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>分光技術の適用領域は、光源に大きく依存します。例えば、狭線幅レーザはフレキシビリティに課題があります。一方で、これまで使われていた&nbsp;GloBar (赤外分光につかわれている黒体タイプの発生源)は輝度が低いために信号対雑音比(SN比)に課題がありました。NKT Photonicsが開発したMid-IR Supercontinuum レーザは、超広帯域スペクトルを持ち、GloBarより100万倍も輝度が高いという特長があります。 Mid-IR Suprcontinuum レーザは、従来からあった狭線幅レーザと GloBar の性能ギャップを埋める全く新しい光源です。</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>Mid-IR Supercontinuumレーザは、高ピークパルス光が高非線形光ファイバを伝搬させて生成できます。他社の Mid-IR Supercontinuum レーザは、繰り返し周波数が 数10 – 100 kHz 程度と低いため、FT-IR分光分析での使用が困難でしたが、SuperK MIR はそれらの用途にも適した光源となっております。</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":3} -->
+<h3>用途</h3>
+<!-- /wp:heading -->
+
+<!-- wp:embed {"url":"https://www.youtube.com/watch?v=6HQdjGLSyJo","type":"video","providerNameSlug":"youtube","responsive":true,"align":"right","className":"wp-embed-aspect-16-9 wp-has-aspect-ratio"} -->
+<figure class="wp-block-embed alignright is-type-video is-provider-youtube wp-block-embed-youtube wp-embed-aspect-16-9 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
+https://www.youtube.com/watch?v=6HQdjGLSyJo
+</div></figure>
+<!-- /wp:embed -->
+
+<!-- wp:paragraph -->
+<p>SuperK MIRは シンクロトロンMIRビームや、GloBarのようなMid-IR 光源を使った研究をしている方にご検討いただきたい製品です。</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>Mid-IR Supercontinuum レーザ は光ファイバの評価、太陽光セル評価、ガス検知・ガス分析、燃焼システムの計測にお使いいただけます。MIR分光法では、生体組織の細胞分析、ガス、薬剤、麻薬、毒物、汚染物質、食品・飲料の品質管理、石油製品の同定、分析に使えます。また、Mid-IR用コンポーネントの研究開発用、検査用の光源としても最適です。</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>最近では、MIRスペクトルイメージング（MIR顕微分光法）の光源にも検討されています。NKT Photonicsも参画している欧州の&nbsp;<a href="http://minerva-project.eu/" target="_blank" rel="noreferrer noopener">MINERVAプロジェクト</a>では、Mid-IR Supercontinuum レーザを用いた癌の in vivo MIR光学生検（MIRイメージング）を実現して、癌の早期診断技術の確率を目指しています。右の動画では、MINERVA プロジェクタにおける MIRスペクトルイメージングの方法について解説しています。</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>SuperK MIRは既に欧州などで 10台程度の販売実績があります。2017年 6月にミュンヘンで開催される LASER World of PHOTONICS に世界初展示されました。時期にもよりますが、日本国内での評価用デモも可能です。ご興味をお持ちいただきましたら、お気軽にご相談ください。</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":3} -->
+<h3>参考文献：Mid-IR Supercontinuum レーザの発生方法</h3>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>Mid-IR Supercontinuum レーザの発生にご興味のあるかたは、下記をご覧ください。</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:table {"className":"is-style-leftheadvar"} -->
+<figure class="wp-block-table is-style-leftheadvar"><table><tbody><tr><td>無料公開（報告書）</td><td>Moselund, Peter M.; Petersen, Christian; Leick, Lasse; Dam, Jeppe Seidelin; Tidemand-Lichtenberg, Peter; Pedersen, Christian ,”<a rel="noreferrer noopener" href="http://orbit.dtu.dk/en/publications/highly-stable-allfiber-high-power-zblan-supercontinuum-source-reaching-475-m-used-for-nanosecond-midir-spectroscopy(3a6df7ad-ebf7-4a71-a878-0c5fb6628c14).html" target="_blank">Highly Stable, All-fiber, High Power ZBLAN Supercontinuum Source Reaching 4.75 µm used for Nanosecond mid-IR Spectroscopy,</a>” Annual report (2013)</td></tr><tr><td>無料公開（論文）</td><td>Zhuoqi Tang, David Furniss, Michael Fay, Hesham Sakr, Lukasz Sójka, Nigel Neate, Nicola Weston, Slawomir Sujecki, Trevor M. Benson, and Angela B. Seddon, “<a rel="noreferrer noopener" href="https://www.osapublishing.org/ome/fulltext.cfm?uri=ome-5-4-870" target="_blank">Mid-infrared photoluminescence in small-core fiber of praseodymium-ion doped selenide-based chalcogenide glass,</a>” Opt. Mater. Express&nbsp;<strong>5</strong>, 870-886 (2015)</td></tr><tr><td>無料公開（論文）</td><td>Zhuoqi Tang, Vladimir S. Shiryaev, David Furniss, Lukasz Sojka, Slawomir Sujecki, Trevor M. Benson, Angela B. Seddon, and Mikhail F. Churbanov, “<a rel="noreferrer noopener" href="https://www.osapublishing.org/ome/fulltext.cfm?uri=ome-5-8-1722&amp;id=321694" target="_blank">Low loss Ge-As-Se chalcogenide glass fiber, fabricated using extruded preform, for mid-infrared photonics,</a>” Opt. Mater. Express&nbsp;<strong>5</strong>, 1722-1737 (2015)</td></tr><tr><td>無料公開（記事）</td><td>Angela B. Seddon, Bruce Napier, Ian Lindsay, Samir Lamrini, Peter M. Moselund, Nick Stone, and&nbsp;Ole Bang, “<a rel="noreferrer noopener" href="http://www.bioopticsworld.com/articles/print/volume-9/issue-2/biooptics-features/mid-infrared-spectroscopy-bioimaging-moving-toward-mir-optical-biopsy.html" target="_blank">Mid-infrared Spectroscopy/Bioimaging: Moving toward MIR optical biopsy</a>”&nbsp;Laser Focus World (2016) .<br><a rel="noreferrer noopener" href="http://ex-press.jp/wp-content/uploads/2016/07/LFWJ1605_P36-39_bo01.pdf" target="_blank">日本語版：Laser Focus World Japan (PDF).</a></td></tr><tr><td>無料公開（論文）</td><td>Harshana G. Dantanarayana, Nabil Abdel-Moneim, Zhuoqi Tang, Lukasz Sojka, Slawomir Sujecki, David Furniss, Angela B. Seddon, Irnis Kubat, Ole Bang, and Trevor M. Benson, “<a rel="noreferrer noopener" href="https://www.osapublishing.org/ome/fulltext.cfm?uri=ome-4-7-1444&amp;id=294402" target="_blank">Refractive index dispersion of chalcogenide glasses for ultra-high numerical-aperture fiber for mid-infrared supercontinuum generation,</a>” Opt. Mater. Express&nbsp;<strong>4</strong>, 1444-1455 (2014)</td></tr><tr><td>有料（論文）</td><td>Günter Steinmeyer&nbsp;and&nbsp;Julia S. Skibina, “<a rel="noreferrer noopener" href="http://www.nature.com/nphoton/journal/v8/n11/full/nphoton.2014.254.html#affil-auth" target="_blank">Supercontinua: Entering the mid-infrared,</a>”&nbsp;Nature Photonics&nbsp;<strong>8</strong>, 814–815&nbsp;(2014).</td></tr><tr><td>有料（論文）</td><td>C. R. Petersen, U. Møller, I. Kubat, B. Zhou, S. Dupont, J. Ramsay, T. Benson, S. Sujecki, N. Abdel-Moneim, Z. Tang, D. Furniss, A. Seddon, and O. Bang, “<a rel="noreferrer noopener" href="http://www.nature.com/nphoton/journal/v8/n11/full/nphoton.2014.213.html" target="_blank">Mid-infrared supercontinuum covering the 1.4–13.3 μm molecular fingerprint region using ultra-high NA chalcogenide step-index fibre,</a>” Nat. Photonics&nbsp;<strong>8</strong>(11), 830–834 (2014).</td></tr><tr><td>有料（予稿）</td><td>C. R. Petersen, U. Møller, I. Kubat, B. Zhou, S. Dupont, J. Ramsay, T. Benson, S. Sujecki, N. Abdel-Moneim, Z. Tang, D. Furniss, A. Seddon, and O. Bang, “<a rel="noreferrer noopener" href="http://www.nature.com/nphoton/journal/v8/n11/full/nphoton.2014.213.html" target="_blank">Mid-infrared supercontinuum covering the 1.4–13.3 μm molecular fingerprint region using ultra-high NA chalcogenide step-index fibre,</a>” Nat. Photonics&nbsp;<strong>8</strong>(11), 830–834 (2014).</td></tr></tbody></table></figure>
+<!-- /wp:table -->

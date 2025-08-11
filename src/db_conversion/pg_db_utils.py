@@ -1,120 +1,70 @@
-import psycopg2
-from typing import List, Dict, Optional
-
-DB_CONFIG = {
-    "host": "10.10.11.25",
-    "port": "5432",
-    "database": "sevensix_dev_1",
-    "user": "postgres",
-    "password": "2244",
-}
+# crud_manager.py
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from typing import Union
+from src.db_conversion.models_organization import Organization
+from src.db_conversion.models_person import Person
+from src.db_conversion.database import Base
+import os
 
 class DatabaseManager:
-    def __init__(self, config: Dict):
-        self.config = config
+    def __init__(self):
+        self.pg_db_url = os.environ.get("PG_DB_URL", "postgresql+psycopg2://postgres:2244@localhost/sevensix_dev_1?client_encoding=utf8")
+        self.engine = create_engine( self.pg_db_url)
+        self.SessionLocal = sessionmaker(bind=self.engine)
 
     def create_tables(self):
-        person_table = """
-        CREATE TABLE IF NOT EXISTS person (
-            id SERIAL PRIMARY KEY,
-            person_name TEXT,
-            title TEXT,
-            career_history TEXT,
-            current_activities TEXT,
-            publications TEXT
-        );
-        """
+        """Create all tables in the database."""
+        Base.metadata.create_all(bind=self.engine)
 
-        organization_table = """
-        CREATE TABLE IF NOT EXISTS organization (
-            id SERIAL PRIMARY KEY,
-            organization_name TEXT,
-            company_overview TEXT,
-            business_activities TEXT,
-            history TEXT,
-            group_companies TEXT,
-            major_business_partners TEXT,
-            sales_trends TEXT,
-            president_message TEXT,
-            interview_articles TEXT,
-            past_transactions TEXT,
-            person_id INTEGER REFERENCES person(id) ON DELETE SET NULL
-        );
-        """
+    def _to_dict(self, data: Union[dict, object]) -> dict:
+        """Convert Pydantic or object with dict/model_dump to plain dict."""
+        if isinstance(data, dict):
+            return data
+        if hasattr(data, "model_dump"):
+            return data.model_dump()
+        if hasattr(data, "dict"):
+            return data.dict()
+        raise TypeError("Data must be a dict or have dict()/model_dump() method")
 
-        with psycopg2.connect(**self.config) as conn:
-            with conn.cursor() as cur:
-                cur.execute(person_table)
-                cur.execute(organization_table)
-            conn.commit()
+    def insert(self, model, data: Union[dict, object]):
+        """Generic insert method."""
+        data = self._to_dict(data)
+        with self.SessionLocal() as session:
+            obj = model(**data)
+            session.add(obj)
+            session.commit()
+            session.refresh(obj)  # get auto-generated ID
+            return obj.id
 
-    def insert_data(self, data: List[Dict]):
-        with psycopg2.connect(**self.config) as conn:
-            with conn.cursor() as cur:
-                for item in data:
-                    person_id = None
+    def insert_organization_with_person(self, data: Union[dict, object]) -> int:
+        data = self._to_dict(data)
+        person_data = data.pop("representative_persons", None)
 
-                    # Insert person if available
-                    person = item.get("representative_persons")
-                    if person:
-                        cur.execute(
-                            """
-                            INSERT INTO person (
-                                person_name,
-                                title,
-                                career_history,
-                                current_activities,
-                                publications
-                            ) VALUES (%s, %s, %s, %s, %s)
-                            RETURNING id
-                            """,
-                            (
-                                person.get("person_name"),
-                                person.get("title"),
-                                person.get("career_history"),
-                                person.get("current_activities"),
-                                person.get("publications")
-                            )
-                        )
-                        person_id = cur.fetchone()[0]
+        with self.SessionLocal() as session:
+            # Create organization first
+            org = Organization(**data)
+            session.add(org)
+            session.flush()  # This assigns the ID to org
+            
+            if person_data:
+                person_data = self._to_dict(person_data)
+                person_data.pop("organization", None)
+                
+                # Set the foreign key to link person to organization
+                person_data['organization_id'] = org.id
+                
+                person = Person(**person_data)
+                session.add(person)
 
-                    # Insert organization with optional person_id
-                    cur.execute(
-                        """
-                        INSERT INTO organization (
-                            organization_name,
-                            company_overview,
-                            business_activities,
-                            history,
-                            group_companies,
-                            major_business_partners,
-                            sales_trends,
-                            president_message,
-                            interview_articles,
-                            past_transactions,
-                            person_id
-                        ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                        """,
-                        (
-                            item.get("organization_name"),
-                            item.get("company_overview"),
-                            item.get("business_activities"),
-                            item.get("history"),
-                            item.get("group_companies"),
-                            item.get("major_business_partners"),
-                            item.get("sales_trends"),
-                            item.get("president_message"),
-                            item.get("interview_articles"),
-                            item.get("past_transactions"),
-                            person_id
-                        )
-                    )
-            conn.commit()
-if __name__ == "__main__":
-    from agentic_doc.parse import parse  # your existing parser
-    db = DatabaseManager(DB_CONFIG)
-    db.create_tables()
+            session.commit()
+            return org.id
 
-    # Example parsed structure
-    data = parse("your_file_path")  # should return List[Dict]
-    db.insert_data(data)
+
+    def insert_person(self, data: Union[dict, object]) -> int:
+        """Insert person only."""
+        return self.insert(Person, data)
+
+    def insert_organization_only(self, data: Union[dict, object]) -> int:
+        """Insert organization without person."""
+        return self.insert(Organization, data)

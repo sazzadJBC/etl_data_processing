@@ -12,6 +12,8 @@ __pycache__/
 .venv
 
 sevensix_data/
+sevensix_dropbox/
+alembic/
 logs/
 output_dir/
 *.db

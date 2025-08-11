@@ -6,7 +6,7 @@ from config import SOURCE_PATH, SUPPORT_FORMAT, OUTPUT_PATH
 from src.docling_extractor import DoclingConverter
 from src.weaviate_utils import WeaviateClient
 from src.agentic_extractor import AgenticExtractor
-
+from src.db_conversion.pg_db_utils import DatabaseManager
 import os
 from pathlib import Path
 class ETLPipeline:
@@ -21,6 +21,8 @@ class ETLPipeline:
         :param agentic_parse: Whether to use Agentic Doc for parsing PDF files.
         :param weaviate_collection_name: Name of the Weaviate collection to use.
         :param threshold_mb: File size threshold (MB) for using Dask.
+
+
         """
         self.logger = setup_logger("etl_app")
 
@@ -33,6 +35,7 @@ class ETLPipeline:
         self.client = WeaviateClient(collection_name=weaviate_collection_name)
         self.doc_converter = DoclingConverter(self.client,self.struct_converter)
         self.agentic_extractor=AgenticExtractor()#include_marginalia=True,include_metadata_in_markdown=False, result_save_dir=OUTPUT_PATH)
+        self.pg_db_manager = DatabaseManager()
         
 
     def run(self):
@@ -63,13 +66,13 @@ class ETLPipeline:
                         result = self.agentic_extractor.parse_documents(file_path)
                         ser_result = result[0].extraction
                         print(ser_result)
+                        self.pg_db_manager.create_tables()
+                        # Insert the structured data into the Postgres database
+                        self.pg_db_manager.insert_organization_with_person(ser_result)
+                        self.logger.info(f"Processed {file_path} with Agentic Doc and inserted into Postgres database.")
                         ### need to implement the logic to convert the extracted data into a format suitable for postgres database
                         
-                        #
-                        # self.client.insert_data_from_lists(
-                        #     texts=[ser_result],
-                        #     sources=[file_path]
-                        # )
+                        
                     else:
                         self.doc_converter.convert_documents(
                             input_paths=[file_path],  # Replace with your file paths
@@ -84,7 +87,7 @@ class ETLPipeline:
 
                 elif ext in [".png", ".jpg", ".jpeg", ".bmp"]:
                     self.logger.info(f"Processing image file: {file_path}")
-                    # TODO: Add image processing here
+                    
 
                 else:
                     self.logger.warning(f"Unsupported format: {file_path}")
@@ -97,8 +100,12 @@ class ETLPipeline:
         self.logger.info("ETL pipeline completed.")
         # Write failed files to file
         if failed_files:
-            fail_log_path = Path(os.environ.get("LOG_DIR","logs")/ "failed_files.txt")
-            fail_log_path.parent.mkdir(parents=True, exist_ok=True)
+            # Create the log directory first
+            log_dir = Path(os.environ.get("LOG_DIR", "logs"))
+            log_dir.mkdir(parents=True, exist_ok=True)
+
+            # Then create the file path
+            fail_log_path = log_dir / "failed_files.txt"
             with open(fail_log_path, "w", encoding="utf-8") as f:
                 for item in failed_files:
                     f.write(f"{item}\n")
